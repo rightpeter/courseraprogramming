@@ -138,11 +138,17 @@ def command_grade_local(args):
     try:
         volume_str = common.mk_submission_volume_str(args.dir)
         logging.debug("Volume string: %s", volume_str)
+
+        extra_hosts = {
+            'somehost': "192.168.1.2",
+        }
+
         host_config = d.create_host_config(
                 binds=[volume_str, ],
                 network_mode='none',
                 mem_limit=memory_limit,
                 memswap_limit=memory_limit,
+                extra_hosts=extra_hosts,
             )
         user = '%s' % 1000
 
@@ -161,6 +167,7 @@ def command_grade_local(args):
                 entrypoint=cmd,
                 user=user,
                 host_config=host_config,
+                hostname='somehost',
             )
         else:
             container = d.create_container(
